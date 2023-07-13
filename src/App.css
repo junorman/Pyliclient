@@ -7,32 +7,41 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.nav-font{ color: #ffffff !important; font-weight:bold; }
+.button-color{ background-color: #fc841c; color: #ffffff; }
+.text-color{ color: #fc841c; }
+.border-color{ border: 2px solid #fc841c; }
+/*body{font-family: "Trirong", serif;}*/
+
+/*cart*/
+.btn-outline-orange {
+  color: #fc841c;
+  border-color:  #fc841c;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.btn-outline-orange:hover {
+  color: #ffffff;
+  background-color:  #fc841c;
+  border-color:  #fc841c;
 }
 
-.App-link {
-  color: #61dafb;
+.btn-outline-orange:focus, .btn-outline-orange.focus {
+  box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn-outline-orange.disabled, .btn-outline-orange:disabled {
+  color:  #fc841c;
+  background-color: transparent;
 }
+
+
+   
+     
+
+
+
+
+/* Sidebar */
+
+
+

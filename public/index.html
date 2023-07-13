@@ -24,12 +24,38 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" href="%PUBLIC_URL%/plugins/fontawesome-free/css/all.min.css"/>
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="%PUBLIC_URL%/dist/css/adminlte.min.css"/>
+
+    <!-- Tempusdominus Bootstrap 4 -->
+    <!-- Select2 -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="%PUBLIC_URL%/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <!-- Begin emoji-picker Stylesheets -->
+    <link href="%PUBLIC_URL%/lib/css/emoji.css" rel="stylesheet">
+
+
     <title>React App</title>
   </head>
-  <body>
+  <body class="hold-transition sidebar-mini">
+   
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
+          <img src="dist/img/user1-128x128.jpg" alt="">
+
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -39,5 +65,108 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <script src="%PUBLIC_URL%/plugins/jquery/jquery.min.js"></script>
+
+    <script src="%PUBLIC_URL%/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="%PUBLIC_URL%/dist/js/adminlte.min.js"></script>
+
+
+    <!-- Select2 -->
+<script src="%PUBLIC_URL%/plugins/select2/js/select2.full.min.js"></script>
+
+<!-- DataTables  & Plugins -->
+<script src="%PUBLIC_URL%/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/jszip/jszip.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="%PUBLIC_URL%/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="%PUBLIC_URL%/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+    <!-- Begin emoji-picker JavaScript -->
+    <script src="%PUBLIC_URL%/lib/js/config.min.js"></script>
+    <script src="%PUBLIC_URL%/lib/js/util.min.js"></script>
+    <script src="%PUBLIC_URL%/lib/js/jquery.emojiarea.min.js"></script>
+    <script src="%PUBLIC_URL%/lib/js/emoji-picker.min.js"></script>
+    <!-- End emoji-picker JavaScript -->
+    <script>
+      $(function() {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+          emojiable_selector: '[data-emojiable=true]',
+          assetsPath: '%PUBLIC_URL%/lib/img/',
+          popupButtonClasses: 'fa fa-smile-o'
+        });
+        // Finds all elements with `emojiable_selector` and converts them to rich emoji input fields
+        // You may want to delay this step if you have dynamically created input fields that appear later in the loading process
+        // It can be called as many times as necessary; previously converted input fields will not be converted again
+        window.emojiPicker.discover();
+      });
+      </script>
+
+     
+
+      <script>
+        $(function () {
+          $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false,
+            //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+          }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+          $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+          });
+        });
+      </script>
+
+      <script>
+        jQuery(function ($) {
+
+$(".sidebar-dropdown > a").click(function() {
+$(".sidebar-submenu").slideUp(200);
+if (
+$(this)
+  .parent()
+  .hasClass("active")
+) {
+$(".sidebar-dropdown").removeClass("active");
+$(this)
+  .parent()
+  .removeClass("active");
+} else {
+$(".sidebar-dropdown").removeClass("active");
+$(this)
+  .next(".sidebar-submenu")
+  .slideDown(200);
+$(this)
+  .parent()
+  .addClass("active");
+}
+});
+
+$("#close-sidebar").click(function() {
+$(".page-wrapper").removeClass("toggled");
+});
+$("#show-sidebar").click(function() {
+$(".page-wrapper").addClass("toggled");
+});
+
+
+
+
+});
+      </script>
   </body>
 </html>
