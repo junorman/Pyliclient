@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const SideBar = () => {
+    const { id } = useParams();
     return (
         <div>
             <aside className="main-sidebar sidebar-dark-primary elevation-4X" style={{ backgroundColor: '#fc841c' }}>
@@ -16,7 +18,7 @@ const SideBar = () => {
                             <img src="../../dist/img/user2-160x160.jpg" className="img-circle elevation-2X" alt="User Image" />
                         </div>
                         <div className="info">
-                            <Link to={`/details-user/${14}`} className="d-block" style={{ color: '#ffffff', fontWeight: 'bold', 
+                            <Link to={`/details-user/${id}`} className="d-block" style={{ color: '#ffffff', fontWeight: 'bold', 
                             fontSize: '18px' }}>Alexander Pierce</Link>
                         </div>
                     </div>
@@ -95,29 +97,30 @@ const SideBar = () => {
                                     </li>
                                 </ul>
                             </li>
-                            <li className="nav-item">
-                                <a href="#" className="nav-link" style={{ color: '#ffffff' }}>
+                            <li className="active nav-item">
+                                <a href="#store_link" data-toggle="collapse" aria-expanded="false" className="nav-link" style={{ color: '#ffffff' }}>
                                     <i className="nav-icon fas fa-shopping-cart"></i>
                                     <p>
                                         MAGASINS
-                                        <i className="right fas fa-angle-left"></i>
+                                        <i className="fas fa-angle-left right"></i>
                                     </p>
                                 </a>
-                                <ul className="nav nav-treeview">
+                                <ul className="collapse list-unstyled nav" id="store_link">
                                     <li className="nav-item">
-                                        <a href="pages/charts/chartjs.html" className="nav-link" style={{ color: '#ffffff' }}>
+                                        <Link className="nav-link" style={{ color: '#ffffff' }} to={'/add-store'}>
                                             <i className="far fa-circle nav-icon"></i>
                                             <p>Ajouter</p>
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <a href="pages/charts/chartjs.html" className="nav-link" style={{ color: '#ffffff' }}>
+                                        <Link className="nav-link" style={{ color: '#ffffff' }} to={'/view-store'}>
                                             <i className="far fa-circle nav-icon"></i>
                                             <p>Consulter</p>
-                                        </a>
+                                        </Link>
                                     </li>
                                 </ul>
                             </li>
+                            
                             <li className="nav-item">
                                 <a href="#" className="nav-link" style={{ color: '#ffffff' }}>
                                     <i className="nav-icon fas fa-pen"></i>

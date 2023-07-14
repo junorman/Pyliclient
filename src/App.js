@@ -22,6 +22,9 @@ import AddUser from './AddUser';
 import ViewUser from './ViewUser';
 import DetailsUser from './DetailsUser';
 import EditUser from "./EditUser";
+import AddStore from "./AddStore";
+import ViewStore from "./ViewStore";
+import EditStore from "./EditStore";
 
 function App() {
   return (
@@ -49,6 +52,9 @@ function App() {
         <Route path="/view_user" element={<ViewUser />}/>
         <Route path="/details-user/:id" element={<DetailsUser />} />
         <Route path="/edit-user/:id" element={<EditUser />} />
+        <Route path="/add-store" element={<AddStore />} />
+        <Route path="/view-store" element={<ViewStore />} />
+        <Route path="/edit-store/:id" element={<EditStore />} />
 
         <Route path="/details_posts" element={<DetailPosts />}/>
       </Routes>
