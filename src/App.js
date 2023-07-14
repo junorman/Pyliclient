@@ -21,6 +21,7 @@ import ViewProfile from './ViewProfile';
 import AddUser from './AddUser';
 import ViewUser from './ViewUser';
 import DetailsUser from './DetailsUser';
+import EditUser from "./EditUser";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
         <Route path="/add_user" element={<AddUser />}/>
         <Route path="/view_user" element={<ViewUser />}/>
         <Route path="/details-user/:id" element={<DetailsUser />} />
+        <Route path="/edit-user/:id" element={<EditUser />} />
 
         <Route path="/details_posts" element={<DetailPosts />}/>
       </Routes>

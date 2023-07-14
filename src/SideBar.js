@@ -16,7 +16,8 @@ const SideBar = () => {
                             <img src="../../dist/img/user2-160x160.jpg" className="img-circle elevation-2X" alt="User Image" />
                         </div>
                         <div className="info">
-                            <a href="user-profile.html" className="d-block" style={{ color: '#ffffff', fontWeight: 'bold', fontSize: '18px' }}>Alexander Pierce</a>
+                            <Link to={`/details-user/${14}`} className="d-block" style={{ color: '#ffffff', fontWeight: 'bold', 
+                            fontSize: '18px' }}>Alexander Pierce</Link>
                         </div>
                     </div>
 

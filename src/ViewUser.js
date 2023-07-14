@@ -226,7 +226,7 @@ const ViewUser = () => {
                                   <td>{user.nom}</td>
                                   <td>
                                     <Link className="btn btn-success btn-sm"
-                                      to={`/details-user/${user.id_user}`}>
+                                      to={`/edit-user/${user.id_user}`}>
                                       <i className="fa fa-edit"></i>
                                     </Link>
                                     <button onClick={() => deleteUser(user.id_user)} className="btn btn-danger btn-sm">

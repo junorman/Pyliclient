@@ -8,45 +8,152 @@ const DetailsUser = () => {
 
     const [last_name, setLastName] = useState('');
     const [first_name, setFirstName] = useState('');
+    const [email, setEmail] = useState('');
+    const [confirmEmail, setConfirmEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
+    const [pass, setPass]= useState('');
+    const [confirmPass, setConfirmPass] = useState('');
     const [gender, setGender] = useState('');
     const [isValid, setIsValid] = useState('');
-    const {id} = useParams();
+    const { id } = useParams();
     const [user, setUser] = useState([]);
+    const [image, setImage] = useState('');
 
-    const handleSubmit = (e) => {
+    const handleSubmitChangeProfile = (e) => {
+        e.preventDefault();       
+        const formData = new FormData();
+        formData.append('image', image);
+
+        axios.post("http://localhost:8002/change-profile/"+id, formData,
+        {
+            headers: {'Authorization': localStorage.getItem('token') }
+        })
+        .then(res => { 
+            if (res.data.valid == true) {
+                console.log(res.data.message);
+                /*Swal.fire({
+                    title: 'Es-tu sûr?',
+                    text: "Souhaitez-vous modifier cette ligne? ",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, modifié!'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      Swal.fire(
+                        'Modification!',
+                        'Votre ligne a été modifiée.',
+                        'success'
+                      )
+                    }
+                  }) */                   
+            } else {
+                console.log("une erreur est survenue");
+            }
+        })
+        .catch(err =>  console.log(err));
+    }
+
+    const handleSubmitChangePass = (e) => {
         e.preventDefault();
-        const user = { last_name, first_name, phone, 
-            country, city, gender}
+        const password = { pass }
 
-            axios.post("http://localhost:8002/edit-user/"+id, user, {
-                headers: { 'Authorization': localStorage.getItem('token') }
-            }).then(res => {
-                if (res.data.valid == true) {
-                    //console.log(res.data.message);
-                    Swal.fire({
-                        title: 'Es-tu sûr?',
-                        text: "Souhaitez-vous modifier cette ligne? ",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Oui, modifié!'
-                      }).then((result) => {
-                        if (result.isConfirmed) {
-                          Swal.fire(
+        axios.post("http://localhost:8002/edit-pass/" + id, password, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        }).then(res => {
+            if (res.data.valid == true) {
+                //console.log(res.data.message);
+                Swal.fire({
+                    title: 'Es-tu sûr?',
+                    text: "Souhaitez-vous modifier cette ligne? ",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, modifié!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
                             'Modification!',
                             'Votre ligne a été modifiée.',
                             'success'
-                          )
-                        }
-                      })                    
-                } else {
-                    console.log("une erreur est survenue");
-                }
-            }).catch(err => console.log(err));
+                        )
+                    }
+                })
+            } else {
+                console.log("une erreur est survenue");
+            }
+        }).catch(err => console.log(err));
+    }
+    
+    const handleSubmitChangeEmail = (e) => {
+        e.preventDefault();
+        const mail = { email }
+
+        axios.post("http://localhost:8002/edit-email/" + id, mail, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        }).then(res => {
+            if (res.data.valid == true) {
+                //console.log(res.data.message);
+                Swal.fire({
+                    title: 'Es-tu sûr?',
+                    text: "Souhaitez-vous modifier cette ligne? ",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, modifié!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Modification!',
+                            'Votre ligne a été modifiée.',
+                            'success'
+                        )
+                    }
+                })
+            } else {
+                console.log("une erreur est survenue");
+            }
+        }).catch(err => console.log(err));
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const user = {
+            last_name, first_name, phone,
+            country, city, gender
+        }
+
+        axios.post("http://localhost:8002/edit-user/" + id, user, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        }).then(res => {
+            if (res.data.valid == true) {
+                //console.log(res.data.message);
+                Swal.fire({
+                    title: 'Es-tu sûr?',
+                    text: "Souhaitez-vous modifier cette ligne? ",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, modifié!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Modification!',
+                            'Votre ligne a été modifiée.',
+                            'success'
+                        )
+                    }
+                })
+            } else {
+                console.log("une erreur est survenue");
+            }
+        }).catch(err => console.log(err));
     }
 
     const handleGenderChange = (e) => {
@@ -61,28 +168,28 @@ const DetailsUser = () => {
         console.log(setCity(e.target.value));
     };
 
-     //DETAILS USER
+    //DETAILS USER
     useEffect(() => {
-        axios.get("http://localhost:8002/details-user/"+id).then(res => {
-        //console.log(res.data.result);
-        //console.log("valide: "+res.data.valid);
-        //console.log("session: "+res.data.sessionUser.name);
-        //console.log("shine: "+res.data.shine);
+        axios.get("http://localhost:8002/details-user/" + id).then(res => {
+            //console.log(res.data.result);
+            //console.log("valide: "+res.data.valid);
+            //console.log("session: "+res.data.sessionUser.name);
+            //console.log("shine: "+res.data.shine);
 
-        setLastName(res.data.result[0].nom);
-        setFirstName(res.data.result[0].prenom);
-        setPhone(res.data.result[0].telephone);
-        setCountry(res.data.result[0].id_pays);
-        setCity(res.data.result[0].id_ville);
-        setGender(res.data.result[0].genre);
-        
-        //setIsLoading(false);
-        //setError(null);
+            setLastName(res.data.result[0].nom);
+            setFirstName(res.data.result[0].prenom);
+            setPhone(res.data.result[0].telephone);
+            setCountry(res.data.result[0].id_pays);
+            setCity(res.data.result[0].id_ville);
+            setGender(res.data.result[0].genre);
+
+            //setIsLoading(false);
+            //setError(null);
 
         }).catch(err => console.log(err.message));
     }, []);
 
-    return ( 
+    return (
         <div>
             <div className="wrapper">
 
@@ -232,155 +339,342 @@ const DetailsUser = () => {
                     </div>
 
                     {/* Main content */}
-                    <div className="content">
-                        <div className="row  mb-3">
-                            <div className="col-sm-12">
-                                <br />
-                                <div className="d-flex half">
+                    <section className="content">
+                        <div className="container-fluid">
+                            <div className="row">
+                                <div className="col-md-3">
+
+                                    {/* Profile Image */}
+                                    <div className="card card-primary card-outline">
+                                        <div className="card-body box-profile">
+                                            <div className="text-center">
+                                                <img className="profile-user-img img-fluid img-circle"
+                                                    src="../../dist/img/user4-128x128.jpg"
+                                                    alt="User profile picture" />
+                                            </div>
+
+                                            <h3 className="profile-username text-center">{last_name} {first_name}</h3>
+
+                                            <p className="text-muted text-center">Software Engineer</p>
+
+                                            <ul className="list-group list-group-unbordered mb-3">
+                                                <li className="list-group-item">
+                                                    <b>Followers</b> <a className="float-right">1,322</a>
+                                                </li>
+                                                <li className="list-group-item">
+                                                    <b>Following</b> <a className="float-right">543</a>
+                                                </li>
+                                                <li className="list-group-item">
+                                                    <b>Friends</b> <a className="float-right">13,287</a>
+                                                </li>
+                                            </ul>
+
+                                            <a data-toggle="modal" data-target="#exampleModal" className="btn btn-primary btn-block">
+                                                <b>
+                                                    <i className="fa fa-image"></i> Modifier le profil
+                                                </b>
+                                            </a>
+                                        </div>
+                                        {/* /.card-body */}
+                                    </div>
+                                    {/* /.card */}
+
+                                    {/* About Me Box */}
+                                    <div className="card card-primary">
+                                        <div className="card-header">
+                                            <h3 className="card-title">A propos</h3>
+                                        </div>
+                                        {/* /.card-header */}
+                                        <div className="card-body">
+                                            <strong><i className="fas fa-book mr-1"></i> Education</strong>
+
+                                            <p className="text-muted">
+                                                B.S. in Computer Science from the University of Tennessee at Knoxville
+                                            </p>
+
+                                            <hr />
+
+                                            <strong><i className="fas fa-map-marker-alt mr-1"></i> Location</strong>
+
+                                            <p className="text-muted">Malibu, California</p>
+
+                                            <hr />
+
+                                            <strong><i className="fas fa-pencil-alt mr-1"></i> Skills</strong>
+
+                                            <p className="text-muted">
+                                                <span className="tag tag-danger">UI Design</span>
+                                                <span className="tag tag-success">Coding</span>
+                                                <span className="tag tag-info">Javascript</span>
+                                                <span className="tag tag-warning">PHP</span>
+                                                <span className="tag tag-primary">Node.js</span>
+                                            </p>
+
+                                            <hr />
+
+                                            <strong><i className="far fa-file-alt mr-1"></i> Notes</strong>
+
+                                            <p className="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                                        </div>
+                                        {/* /.card-body */}
+                                    </div>
+                                    {/* /.card */}
+                                </div>
+                                {/* /.col */}
+                                <div className="col-md-9">
+                                    <div className="card">
+                                        <div className="card-header p-2">
+                                            <ul className="nav nav-pills">
+                                                <li className="nav-item"><a className="nav-link active" href="#settings" data-toggle="tab">Settings</a></li>
+                                                <li className="nav-item"><a className="nav-link" href="#activity" data-toggle="tab">Activity</a></li>
+                                                <li className="nav-item"><a className="nav-link" href="#timeline" data-toggle="tab">Timeline</a></li>
+                                            </ul>
+                                        </div>{/* /.card-header */}
+                                        <div className="card-body">
+                                            <div className="tab-content">
+                                                <div className="active tab-pane" id="settings">
+                                                <div className="d-flex half">
                                     <div className="container">
                                         <div className="row align-items-center justify-content-center">
                                             <div className="col-md-12">
-
-                                                <div className="card card-default">
-                                                    <div className="card-header" style={{ backgroundColor: '#000099', color: '#ffffff' }}>
-                                                        <h3 className="card-title"><i className="fa fa-user-plus"></i> DETAILS UTILISATEUR</h3>
-
-                                                        <div className="card-tools">
-                                                            <button type="button" className="btn btn-tool" data-card-widget="collapse">
-                                                                <i className="fas fa-minus"></i>
-                                                            </button>
-                                                            <button type="button" className="btn btn-tool" data-card-widget="remove">
-                                                                <i className="fas fa-times"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                    {/* /.card-header */}
-
-                                                    <div className="card-body" style={{ border: '2px solid #000099' }}>
-                                                        <div className="row">
-                                                            <div className="col-md-12">
-                                                                <form onSubmit={handleSubmit}>
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label >Nom</label>
-                                                                                <input type="text" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. John" 
-                                                                                value={last_name}
-                                                                                onChange={(e) => {setLastName(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label >Prénom</label>
-                                                                                <input type="text" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. Smith"
-                                                                                value={first_name}
-                                                                                onChange={(e) => {setFirstName(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <form onSubmit={handleSubmit}>
+                                                            <div className="row">
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group first">
+                                                                        <label >Nom</label>
+                                                                        <input type="text" 
+                                                                        className="form-control button-border" 
+                                                                        placeholder="e.g. John" 
+                                                                        value={last_name}
+                                                                        onChange={(e) => {setLastName(e.target.value)} } />
                                                                     </div>
-                                                                    <div className="row">
-                                                                        <div className="col-md-12">
-                                                                            <div className="form-group first">
-                                                                                <label for="email">Numéro</label>
-                                                                                <input type="text" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. john@your-domain.com"
-                                                                                value={phone}
-                                                                                onChange={(e) => {setPhone(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group first">
+                                                                        <label >Prénom</label>
+                                                                        <input type="text" 
+                                                                        className="form-control button-border" 
+                                                                        placeholder="e.g. Smith"
+                                                                        value={first_name}
+                                                                        onChange={(e) => {setFirstName(e.target.value)} } />
                                                                     </div>
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label >Pays</label>
-                                                                                <select className="form-control button-border"
-                                                                                value={country}
-                                                                                onChange={handleCountryChange}>
-                                                                                    <option checked={country == "1"} value="1">Fance</option>
-                                                                                    <option checked={country == "2"} value="2">USA</option>
-                                                                                    <option checked={country == "3"} value="3">Italie</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label >Ville</label>
-                                                                                <select className="form-control button-border"
-                                                                                value={city}
-                                                                                onChange={handleCityChange}>
-                                                                                    <option checked={country == "1"} value="1">Paris</option>
-                                                                                    <option checked={country == "2"} value="2">Newyork</option>
-                                                                                    <option checked={country == "3"} value="3">Rome</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="row row-space">
-                                                                        <div className="col-2">
-                                                                            <div className="input-group">
-                                                                                <label className="label">Genre</label>
-                                                                                <div className="p-t-10">
-                                                                                    <label className="radio-container m-r-45">Male                                                                                      
-                                                                                        <input 
-                                                                                        checked={gender == "M"}
-                                                                                        type="radio" 
-                                                                                        name="gender" 
-                                                                                        value="M"
-                                                                                        onChange={handleGenderChange} />
-                                                                                        <span className="checkmark"></span>
-                                                                                    </label>
-                                                                                    <label className="radio-container">Female
-                                                                                        <input 
-                                                                                        checked={gender == "F"} 
-                                                                                        type="radio"
-                                                                                        name="gender"
-                                                                                        value="F"
-                                                                                        onChange={handleGenderChange} /> 
-                                                                                        <span className="checkmark"></span>
-                                                                                    </label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                           
-
-                                                                    <button className="btn button-color">
-                                                                        <i className="fa fa-edit"></i> Modifier
-                                                                    </button>
-
-                                                                </form>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                            <div className="row">
+                                                                <div className="col-md-12">
+                                                                    <div className="form-group first">
+                                                                        <label for="email">Numéro</label>
+                                                                        <input type="text" 
+                                                                        className="form-control button-border" 
+                                                                        placeholder="e.g. john@your-domain.com"
+                                                                        value={phone}
+                                                                        onChange={(e) => {setPhone(e.target.value)} } />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group first">
+                                                                        <label >Pays</label>
+                                                                        <select className="form-control button-border"
+                                                                        value={country}
+                                                                        onChange={handleCountryChange}>
+                                                                            <option checked={country == "1"} value="1">Fance</option>
+                                                                            <option checked={country == "2"} value="2">USA</option>
+                                                                            <option checked={country == "3"} value="3">Italie</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group first">
+                                                                        <label >Ville</label>
+                                                                        <select className="form-control button-border"
+                                                                        value={city}
+                                                                        onChange={handleCityChange}>
+                                                                            <option checked={country == "1"} value="1">Paris</option>
+                                                                            <option checked={country == "2"} value="2">Newyork</option>
+                                                                            <option checked={country == "3"} value="3">Rome</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="row row-space">
+                                                                <div className="col-2">
+                                                                    <div className="input-group">
+                                                                        <label className="label">Genre</label>
+                                                                        <div className="p-t-10">
+                                                                            <label className="radio-container m-r-45">Male                                                                                      
+                                                                                <input 
+                                                                                checked={gender == "M"}
+                                                                                type="radio" 
+                                                                                name="gender" 
+                                                                                value="M"
+                                                                                onChange={handleGenderChange} />
+                                                                                <span className="checkmark"></span>
+                                                                            </label>
+                                                                            <label className="radio-container">Female
+                                                                                <input 
+                                                                                checked={gender == "F"} 
+                                                                                type="radio"
+                                                                                name="gender"
+                                                                                value="F"
+                                                                                onChange={handleGenderChange} /> 
+                                                                                <span className="checkmark"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    
+
+                                                            <button className="btn button-color">
+                                                                <i className="fa fa-edit"></i> Modifier
+                                                            </button>
+
+                                                        </form>
                                                     </div>
-                                                    {/* /.card-body */}
                                                 </div>
+                                            </div>
+                                        </div><br /><br />
+                                        <h6><i className="fa fa-shield"></i> Changer de mot de passe</h6>
+                                        <div className="row align-items-center justify-content-center">
+                                            <div className="col-md-12">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <form onSubmit={handleSubmitChangePass}>
+                                                            <div className="row">
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group first">
+                                                                        <label >Nouveau mot de passe</label>
+                                                                        <input type="text" 
+                                                                        className="form-control button-border" 
+                                                                        placeholder="*********" 
+                                                                        onChange={(e) => {setPass(e.target.value)} } />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group first">
+                                                                        <label >Confirmer le mot de passe</label>
+                                                                        <input type="text" 
+                                                                        className="form-control button-border" 
+                                                                        placeholder="***********"
+                                                                        onChange={(e) => {setConfirmPass(e.target.value)} } />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                          
+                                                            <button className="btn button-color">
+                                                                <i className="fa fa-key"></i> Changer
+                                                            </button>
 
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br /><br />
+                                        <h6><i className="fa fa-envelope"></i> Changer d'adresse email</h6>
+                                        <div className="row align-items-center justify-content-center">
+                                            <div className="col-md-12">
+                                                <div className="row">
+                                                    <div className="col-md-12">
+                                                        <form onSubmit={handleSubmitChangeEmail}>
+                                                            <div className="row">
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group first">
+                                                                        <label >Nouvelle adresse email</label>
+                                                                        <input type="text" 
+                                                                        className="form-control button-border" 
+                                                                        placeholder="*********" 
+                                                                        onChange={(e) => {setEmail(e.target.value)} } />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6">
+                                                                    <div className="form-group first">
+                                                                        <label >Confirmer l'adresse email</label>
+                                                                        <input type="text" 
+                                                                        className="form-control button-border" 
+                                                                        placeholder="***********"
+                                                                        onChange={(e) => {setConfirmEmail(e.target.value)} } />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                          
+                                                            <button className="btn button-color">
+                                                                <i className="fa fa-send"></i> Changer
+                                                            </button>
 
-
-
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        {/* /.col-md-6 */}
+                                                </div>
+                                                <div className="tab-pane" id="activity">
 
-                        {/* /.col-md-6 */}
-                    </div>
+                                                </div>
+                                                {/* /.tab-pane */}
+                                                <div className="tab-pane" id="timeline">
+
+                                                </div>
+                                            </div>
+                                            {/* /.tab-content */}
+                                        </div>{/* /.card-body */}
+                                    </div>
+                                    {/* /.card */}
+                                </div>
+                                {/* /.col */}
+                            </div>
+                            {/* /.row */}
+                        </div>{/* /.container-fluid */}
+                    </section>
                     {/* /.row */}
                 </div>
                 {/* /.content */}
             </div>
             {/* /.content-wrapper */}
 
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header" style={{backgroundColor: '#000099', color: '#ffffff'}}>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        <i className="fa fa-user"></i> Editer le profil
+                        </h1>
+                        <button type="button" class=" btn btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    <div className="row">
+                        <div className="col-md-12">
+                        <form onSubmit={handleSubmitChangeProfile}>
+                            <div className="mb-3">
+                                <label htmlFor="">Sélectionner une image</label>
+                                <input multiple type="file" className="form-control" name="upload_file"
+                                onChange={(e) => setImage(e.target.files[0]) }/>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Valider</button>
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        X Fermer
+                        </button>
+                        <button type="button" class="btn button-color">
+                        <i className="fa fa-edit"></i> Modifier
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-     );
+    );
 }
- 
+
 export default DetailsUser;

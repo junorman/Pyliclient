@@ -311,30 +311,30 @@ const ViewProfile = () => {
             
 
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header" style={{backgroundColor: '#000099', color: '#ffffff'}}>
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">
-                       <i className="fa fa-user"></i> Editer le profil
-                    </h1>
-                    <button type="button" class=" btn btn-close" data-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header" style={{backgroundColor: '#000099', color: '#ffffff'}}>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        <i className="fa fa-user"></i> Editer le profil
+                        </h1>
+                        <button type="button" class=" btn btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" className="form-control" value={idProfil} 
+                        />
+                        <input type="text" className="form-control" value={updateLibelle}
+                        onChange={(e) => { setUpdateLibelle(e.target.value)}}/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        X Fermer
+                        </button>
+                        <button onClick={updateProfile} type="button" class="btn button-color">
+                        <i className="fa fa-edit"></i> Modifier
+                        </button>
+                    </div>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <input type="hidden" className="form-control" value={idProfil} 
-                    />
-                    <input type="text" className="form-control" value={updateLibelle}
-                    onChange={(e) => { setUpdateLibelle(e.target.value)}}/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                       X Fermer
-                    </button>
-                    <button onClick={updateProfile} type="button" class="btn button-color">
-                       <i className="fa fa-edit"></i> Modifier
-                    </button>
-                </div>
-                </div>
-            </div>
             </div>
 
         </div>
