@@ -3,50 +3,93 @@ import SideBar from "./SideBar";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const AddUser = () => {
-    const [last_name, setLastName] = useState('');
-    const [first_name, setFirstName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [country, setCountry] = useState('');
-    const [city, setCity] = useState('');
-    const [pass, setPass] = useState('');
-    const [confirm_pass, setConfirmPass] = useState('');
-    const [gender, setGender] = useState('');
-    const [policy, setPolicy] = useState(true);
-    const [isValid, setIsValid] = useState('');
+const AddPost = () => {
 
-    const handleChange = (event) => {
-        if (event.target.checked) {
-            console.log('✅ Checkbox is checked');
-          } else {
-            console.log('⛔️ Checkbox is NOT checked');
-          }
-          setPolicy(current => !current);
-      }
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('');
+    const [image, setImage] = useState('');
+    const [category, setCategory] = useState('');
+    const [photo, setPhoto] = useState([
+        {
+            name: "photo1.jpg"
+        },
+        {
+            name: "photo2.jpg"
+        },
+        {
+            name: "photo3.jpg"
+        },
+    ]);
+    var images = [];
+    var imgArray = [];
+    const [selectedImages, setSelectedImages] = useState([]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const user = { last_name, first_name, email, phone, 
-            country, city, pass, confirm_pass, gender, policy}
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('desc', desc);
+        formData.append('category', category);
+        //formData.append('image', image);
 
-            axios.post("http://localhost:8002/add-user", user, {
-                headers: { 'Authorization': localStorage.getItem('token') }
-            }).then(res => {
-                if (res.data.valid == true) {
-                    //console.log(res.data.message);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Formidable',
-                        text: res.data.message,
-                      })
-                } else {
-                    console.log("une erreur est survenue");
-                }
-            }).catch(err => console.log(err));
-       
-            
+        Array.from(image).forEach(item => {
+            formData.append('image', item);
+            //console.log(item);
+          });
+
+        axios.post("http://localhost:8002/add-post", formData, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        }).then(res => {
+            if (res.data.valid == true) {
+                //console.log(res.data.message);
+                /*Swal.fire({
+                    icon: 'success',
+                    title: 'Formidable',
+                    text: res.data.message,
+                })*/
+            } else {
+                console.log("une erreur est survenue");
+            }
+        }).catch(err => console.log(err));
+
+
     }
+
+    const onSelectFiles = (e) => {
+
+        setImage(e.target.files);
+
+        //let newData = { ...file, secondName: 'Fogerty', test: 'file'};
+        Array.from(e.target.files).forEach(item => {
+            console.log("My data2");
+            images.push(item);
+            console.log(images);
+        });
+
+        setPhoto((previousImages) => previousImages.concat(images));
+        console.log("Table images");
+        console.log(images);
+
+        imgArray = e.target.files;
+        const selectedFiles = e.target.files;
+        const selectedFilesArray = Array.from(selectedFiles);
+
+        const imagesArray = selectedFilesArray.map((file) => {
+            console.log("OU");
+            console.log(file);
+            return { url: URL.createObjectURL(file), name: file.name };
+        });
+
+        setSelectedImages((previousImages) => previousImages.concat(imagesArray));
+    };
+
+    const deleteById = (id, index) => {
+        console.log("xx==" + id + ":" + index);
+        setSelectedImages(selectedImages.filter((e) => e.url !== id));
+        setImage(photo.filter((e) => e.name !== index));
+        setPhoto(photo.filter((e) => e.name !== index));
+    }
+
     return (
         <div class="hold-transition sidebar-mini">
             <div className="wrapper">
@@ -187,7 +230,7 @@ const AddUser = () => {
                         <div className="container-fluid">
                             <div className="row mb-2">
                                 <div className="col-sm-6">
-                                    <h1 className="m-0">GESTIONS UTILISATEURS</h1>
+                                    <h1 className="m-0">GESTIONS POSTS</h1>
                                 </div>
                                 <div className="col-sm-6">
 
@@ -208,7 +251,7 @@ const AddUser = () => {
 
                                                 <div className="card card-default">
                                                     <div className="card-header" style={{ backgroundColor: '#000099', color: '#ffffff' }}>
-                                                        <h3 className="card-title"><i className="fa fa-user-plus"></i> AJOUTER UN UTILISATEUR</h3>
+                                                        <h3 className="card-title"><i className="fas fa-pen"></i> AJOUTER UN POST</h3>
 
                                                         <div className="card-tools">
                                                             <button type="button" className="btn btn-tool" data-card-widget="collapse">
@@ -228,138 +271,78 @@ const AddUser = () => {
                                                                     <div className="row">
                                                                         <div className="col-md-6">
                                                                             <div className="form-group first">
-                                                                                <label >Nom</label>
-                                                                                <input type="text" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. John" 
-                                                                                onChange={(e) => {setLastName(e.target.value)} } />
+                                                                                <label >Titre</label>
+                                                                                <input type="text"
+                                                                                    className="form-control button-border"
+                                                                                    placeholder="Titre..."
+                                                                                    onChange={(e) => { setTitle(e.target.value) }} />
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-6">
                                                                             <div className="form-group first">
-                                                                                <label >Prénom</label>
-                                                                                <input type="text" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. Smith"
-                                                                                onChange={(e) => {setFirstName(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label for="email">Adresse email</label>
-                                                                                <input type="text" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. john@your-domain.com"
-                                                                                onChange={(e) => {setEmail(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label for="email">Numéro</label>
-                                                                                <input type="email" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. john@your-domain.com"
-                                                                                onChange={(e) => {setPhone(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label >Pays</label>
+                                                                                <label >Categories</label>
                                                                                 <select className="form-control button-border"
-                                                                                value={country}
-                                                                                onChange={(e) => {setCountry(e.target.value)} }>
-                                                                                    <option value="1">Fance</option>
-                                                                                    <option value="2">USA</option>
-                                                                                    <option value="3">Italie</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label >Ville</label>
-                                                                                <select className="form-control button-border"
-                                                                                value={city}
-                                                                                onChange={(e) => {setCity(e.target.value)} }>
-                                                                                    <option value="1">Paris</option>
-                                                                                    <option value="2">Newyork</option>
-                                                                                    <option value="3">Rome</option>
+                                                                                    onChange={(e) => { setCategory(e.target.value) }}>
+                                                                                    <option value="1">Mémoire</option>
+                                                                                    <option value="2">Roman</option>
+                                                                                    <option value="3">Cahier de charge</option>
                                                                                 </select>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div className="row">
-                                                                        <div className="col-md-6">
-
+                                                                        <div className="col-md-12">
                                                                             <div className="form-group last mb-3">
-                                                                                <label for="password">Mot de passe</label>
-                                                                                <input type="password" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="******" 
-                                                                                onChange={(e) => {setPass(e.target.value)} } />
+                                                                                <label for="password">Descriptions</label>
+                                                                                <textarea cols="30" rows="5" className="form-control button-border"
+                                                                                    placeholder="Ecrivez quelque chose..."
+                                                                                    onChange={(e) => { setDesc(e.target.value) }}></textarea>
                                                                             </div>
                                                                         </div>
+                                                                    </div>
+                                                                    <div className="row">
+
                                                                         <div className="col-md-6">
-
                                                                             <div className="form-group last mb-3">
-                                                                                <label for="re-password">Confirmer le mot de passe</label>
-                                                                                <input type="password" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="******" 
-                                                                                onChange={(e) => {setConfirmPass(e.target.value)} } />
+                                                                                <label for="password">Uploader un ou des fichier(s)</label>
+                                                                                <input multiple type="file" className="form-control" name="upload_file"
+                                                                                    onChange={onSelectFiles} />
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="row row-space">
-                                                                        <div className="col-2">
-                                                                            <div className="input-group">
-                                                                                <label className="label">Genre</label>
-                                                                                <div className="p-t-10">
-                                                                                    <label className="radio-container m-r-45">Male
-                                                                                        <input type="radio" 
-                                                                                        name="gender" 
-                                                                                        value="M"
-                                                                                        onChange={(e) => {setGender(e.target.value)} } />
-                                                                                        <span className="checkmark"></span>
-                                                                                    </label>
-                                                                                    <label className="radio-container">Female
-                                                                                        <input type="radio"
-                                                                                        name="gender"
-                                                                                        value="F"
-                                                                                        onChange={(e) => {setGender(e.target.value)} } />
-                                                                                        <span className="checkmark"></span>
-                                                                                    </label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <a href="">Avez-vous déjà un compte?</a>
-                                                                    <div className="d-flex mb-5 mt-4 align-items-center">
-                                                                        <div className="d-flex align-items-center">
-                                                                            <input type="checkbox" 
-                                                                            name="gender"
-                                                                            value={policy}
-                                                                            style={{ backgroundColor: '#fc841c' }}
-                                                                            onChange={handleChange} />&nbsp;&nbsp;
-                                                                            <label className="control  mb-0"><span className="caption">Creating an account means you're okay with our <a href="#">Terms and Conditions</a> and our <a href="#">Privacy Policy</a>.</span>
-
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <button disabled={!policy} className="btn button-color">
+                                                                    <button className="btn button-color">
                                                                         <i className="fa fa-check"></i> Enregistrer
                                                                     </button>
-
                                                                 </form>
                                                             </div>
                                                         </div>
+
                                                     </div>
                                                     {/* /.card-body */}
                                                 </div>
+
+                                                <div className="row">
+                                                                        {selectedImages &&
+                                                                            selectedImages.map((image, index) => {
+                                                                                return (
+                                                                                    <div key={image} class="col-md-6 col-lg-4">
+                                                                                        <div class="card my-3">
+                                                                                            <img src={image.url} alt="upload" style={{ width: '155px', height: '100px' }} />
+                                                                                            <div class="card-body">
+                                                                                                <p class="card-text" style={{ fontSize: '10px', fontWeight: 'bold', textAlign: 'center' }}>
+
+                                                                                                    {image.name && image.name.lenght > 22 ? image.name : image.name.substring(0, 22)} ({index + 1})
+                                                                                                </p>
+                                                                                                <button className="btn btn-sm btn-danger" onClick={() => deleteById(image.url, image.name)}>
+                                                                                                    <i className="fa fa-trash"></i>
+                                                                                                </button>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                );
+                                                                            })}
+
+                                                                    </div>
 
 
 
@@ -384,4 +367,4 @@ const AddUser = () => {
     );
 }
 
-export default AddUser;
+export default AddPost;

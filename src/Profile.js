@@ -1,6 +1,6 @@
 const Profile = () => {
     return (
-        <div>
+        <div class="hold-transition sidebar-mini"> 
             <div className="wrapper">
 
                 {/* Navbar */}

@@ -25,7 +25,9 @@ import EditUser from "./EditUser";
 import AddStore from "./AddStore";
 import ViewStore from "./ViewStore";
 import EditStore from "./EditStore";
-
+import AddPost from "./AddPost";
+import EditPosts from "./EditPosts";
+import ViewPosts from "./ViewPosts";
 function App() {
   return (
     <BrowserRouter>
@@ -55,6 +57,9 @@ function App() {
         <Route path="/add-store" element={<AddStore />} />
         <Route path="/view-store" element={<ViewStore />} />
         <Route path="/edit-store/:id" element={<EditStore />} />
+        <Route path="/add-post" element={<AddPost />} />
+        <Route path="/view-post" element={<ViewPosts />} />
+        <Route path="/edit-post/:id" element={<EditPosts />} />
 
         <Route path="/details_posts" element={<DetailPosts />}/>
       </Routes>

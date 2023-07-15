@@ -4,17 +4,18 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import { Link } from "react-router-dom";
 
-const ViewUser = () => {
-  const [users, setUsers] = useState([]);
-  //PROFILE LIST
+const ViewPosts = () => {
+
+    const [posts, setPosts] = useState([]);
+  //POSTS LIST
   useEffect(() => {
-    axios.get("http://localhost:8002/get-users").then(res => {
+    axios.get("http://localhost:8002/get-posts").then(res => {
       //console.log(res.data.result);
       //console.log("valide: "+res.data.valid);
       //console.log("session: "+res.data.sessionUser.name);
       //console.log("shine: "+res.data.shine);
 
-      setUsers(res.data.result);
+      setPosts(res.data.result);
       //setIsLoading(false);
       //setError(null);
 
@@ -22,8 +23,8 @@ const ViewUser = () => {
   }, []);
 
   //DELETE PROFILE
-  const deleteUser = (id) => {
-    axios.post("http://localhost:8002/delete_user/" + id)
+  const deletePost = (id) => {
+    axios.post("http://localhost:8002/delete-post/" + id)
       .then(res => {
         if (res.data.valid == true) {
           //console.log(res.data.message);
@@ -37,8 +38,8 @@ const ViewUser = () => {
             confirmButtonText: 'Oui, supprimé!'
           }).then((result) => {
             if (result.isConfirmed) {
-              const newUser = users.filter((u) => u.id_user !== id);
-              setUsers(newUser);
+              const newPosts = posts.filter((p) => p.id_post !== id);
+              setPosts(newPosts);
               Swal.fire(
                 'Suppression!',
                 'Votre ligne a été supprimée.',
@@ -53,8 +54,9 @@ const ViewUser = () => {
       .catch(err => console.log(err));
     
   }
-  return (
-    <div class="hold-transition sidebar-mini">
+
+    return ( 
+        <div class="hold-transition sidebar-mini">
       <div className="wrapper">
 
         {/* Navbar */}
@@ -188,54 +190,60 @@ const ViewUser = () => {
         {/* Content Wrapper. Contains page content */}
         <div className="content-wrapper">
           {/* Content Header (Page header) */}
+          <div className="content-header">
+            <div className="container-fluid">
+              <div className="row mb-2">
+                <div className="col-sm-6">
+                  <h1 className="m-0">
+                    <i className="fa fa-cart-plus"></i>  CONSULTER POSTS
+                  </h1>
+                </div>
+                <div className="col-sm-6">
 
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Main content */}
           <div className="content">
             <div className="row  mb-3">
               <div className="col-md-12">
-                <div className="card">
-                  <div className="card-header" style={{ backgroundColor: '#000099', color: '#ffffff' }}>
-                    <h3 className="card-title"><i className="fa fa-eye"></i> CONSULTER UN PROFIL</h3>
 
-                    <div className="card-tools">
-                      <button type="button" className="btn btn-tool" data-card-widget="collapse">
-                        <i className="fas fa-minus"></i>
-                      </button>
-                      <button type="button" className="btn btn-tool" data-card-widget="remove">
-                        <i className="fas fa-times"></i>
-                      </button>
-                    </div>
-                  </div>
+                <div className="card">
                   {/* /.card-header */}
                   <div className="card-body" style={{ border: '2px solid #000099' }}>
                     <div className="row">
                       <div className="col-md-12">
-                        <table id="example1X"
-                          className="table table-bordered table-stripedX">
+                        <table className="table table-bordered">
                           <thead style={{ backgroundColor: '#000099', color: '#ffffff' }}>
                             <tr>
-                              <th>Libelle</th>
-                              <th>Actions</th>
+                              <th scope="col">Titre</th>
+                              <th scope="col">Localité</th>
+                              <th scope="col">Categorie</th>
+                              <th scope="col">Date</th>
+                              <th scope="col">Actions</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {users &&
-                              users.map((user) => (
-                                <tr key={user.id_user}>
-                                  <td>{user.nom}</td>
+                            {posts &&
+                              posts.map((post) => (
+                                <tr key={post.id_post}>
+                                  <th scope="row">{post.titre_post}</th>
+                                  <td>{post.localite_post}</td>
+                                  <td>{post.id_categorie}</td>
+                                  <td>{post.date_post}</td>
                                   <td>
                                     <Link className="btn btn-success btn-sm"
-                                      to={`/edit-user/${user.id_user}`}>
+                                      to={`/edit-post/${post.id_post}`}>
                                       <i className="fa fa-edit"></i>
                                     </Link>
-                                    <button onClick={() => deleteUser(user.id_user)} className="btn btn-danger btn-sm">
+                                    <button onClick={() => deletePost(post.id_post)} className="btn btn-danger btn-sm">
                                       <i className="fa fa-trash"></i>
                                     </button>
                                   </td>
                                 </tr>
                               ))}
-
                           </tbody>
                         </table>
                       </div>
@@ -256,7 +264,7 @@ const ViewUser = () => {
       {/* /.content-wrapper */}
 
     </div>
-  );
+     );
 }
-
-export default ViewUser;
+ 
+export default ViewPosts;

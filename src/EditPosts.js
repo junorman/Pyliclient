@@ -1,53 +1,162 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SideBar from "./SideBar";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Link, useParams } from "react-router-dom";
 
-const AddUser = () => {
-    const [last_name, setLastName] = useState('');
-    const [first_name, setFirstName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [country, setCountry] = useState('');
-    const [city, setCity] = useState('');
-    const [pass, setPass] = useState('');
-    const [confirm_pass, setConfirmPass] = useState('');
-    const [gender, setGender] = useState('');
-    const [policy, setPolicy] = useState(true);
-    const [isValid, setIsValid] = useState('');
+const EditPosts = () => {
 
-    const handleChange = (event) => {
-        if (event.target.checked) {
-            console.log('✅ Checkbox is checked');
-          } else {
-            console.log('⛔️ Checkbox is NOT checked');
-          }
-          setPolicy(current => !current);
-      }
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('');
+    const [image, setImage] = useState('');
+    const [category, setCategory] = useState('');
+    const [idImage, setIdImage] = useState('');
+    const [newPhoto, setNewPhoto] = useState('');
+    const [showImage, setShowImage] = useState('');
+    const {id} = useParams();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const user = { last_name, first_name, email, phone, 
-            country, city, pass, confirm_pass, gender, policy}
-
-            axios.post("http://localhost:8002/add-user", user, {
-                headers: { 'Authorization': localStorage.getItem('token') }
-            }).then(res => {
-                if (res.data.valid == true) {
-                    //console.log(res.data.message);
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Formidable',
-                        text: res.data.message,
-                      })
-                } else {
-                    console.log("une erreur est survenue");
-                }
-            }).catch(err => console.log(err));
-       
-            
+        const posts = { title, desc, category };
+        
+        axios.post("http://localhost:8002/edit-post/"+id, posts, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        }).then(res => {
+            if (res.data.valid == true) {
+                //console.log(res.data.message);
+                Swal.fire({
+                    title: 'Es-tu sûr?',
+                    text: "Souhaitez-vous modifier cette ligne? ",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, modifié!'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      Swal.fire(
+                        'Modification!',
+                        'Votre ligne a été modifiée.',
+                        'success'
+                      )
+                    }
+                  })
+            } else {
+                console.log("une erreur est survenue");
+            }
+        }).catch(err => console.log(err));
     }
-    return (
+
+    //DETAILS POST
+    useEffect(() => {
+        axios.get("http://localhost:8002/details-post/"+id).then(res => {
+        //console.log(res.data.result);
+        //console.log("valide: "+res.data.valid);
+        //console.log("session: "+res.data.sessionUser.name);
+        //console.log("shine: "+res.data.shine);
+
+        setTitle(res.data.result[0].titre_post);
+        setCategory(res.data.result[0].id_categorie);
+        setDesc(res.data.result[0].description_post);
+        
+        //setIsLoading(false);
+        //setError(null);
+
+        }).catch(err => console.log(err.message));
+    }, []);
+
+    //FILES POST LIST
+    useEffect(() => {
+        axios.get("http://localhost:8002/get-posts-files/"+id).then(res => {
+        //console.log(res.data.result);
+        //console.log("valide: "+res.data.valid);
+        //console.log("session: "+res.data.sessionUser.name);
+        //console.log("shine: "+res.data.shine);
+
+        setImage(res.data.result);
+        //setIsLoading(false);
+        //setError(null);
+
+        }).catch(err => console.log(err.message));
+    }, []);
+
+    //DELETE IMAGE
+  const deleteImage = (id) => {
+    axios.post("http://localhost:8002/delete-image/" + id)
+      .then(res => {
+        if (res.data.valid == true) {
+          //console.log(res.data.message);
+          Swal.fire({
+            title: 'Es-tu sûr?',
+            text: "Souhaitez-vous supprimer cette ligne? ",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Oui, supprimé!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const newImage = image.filter((i) => i.id_image !== id);
+              setImage(newImage);
+              Swal.fire(
+                'Suppression!',
+                'Votre ligne a été supprimée.',
+                'success'
+              )
+            }
+          })
+        } else {
+          console.log("une erreur est survenue");
+        }
+      })
+      .catch(err => console.log(err));
+    
+  }
+
+  //UPDATE PROFILE
+  const updateImage = (e) => {
+
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('image', newPhoto);
+    console.log(idImage);
+    console.log(newPhoto);
+    axios.post("http://localhost:8002/edit-image/"+idImage, formData, {
+            headers: { 'Authorization': localStorage.getItem('token') }
+        }).then(res => {
+            if (res.data.valid == true) {
+                //console.log(res.data.message);
+                Swal.fire({
+                    title: 'Es-tu sûr?',
+                    text: "Souhaitez-vous modifier cette ligne? ",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Oui, modifié!'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      Swal.fire(
+                        'Modification!',
+                        'Votre ligne a été modifiée.',
+                        'success'
+                      )
+                    }
+                  }) 
+            } else {
+                console.log("une erreur est survenue");
+            }
+        }).catch(err => console.log(err));
+}
+
+  //SHOW AND GET DATA IN MODAL
+  const showDetails = (e, i) => {
+    console.log(e+" "+i);
+    setIdImage(e);
+    setShowImage(i);
+  }   
+
+    return ( 
         <div class="hold-transition sidebar-mini">
             <div className="wrapper">
 
@@ -187,7 +296,7 @@ const AddUser = () => {
                         <div className="container-fluid">
                             <div className="row mb-2">
                                 <div className="col-sm-6">
-                                    <h1 className="m-0">GESTIONS UTILISATEURS</h1>
+                                    <h1 className="m-0">GESTIONS POSTS</h1>
                                 </div>
                                 <div className="col-sm-6">
 
@@ -208,7 +317,7 @@ const AddUser = () => {
 
                                                 <div className="card card-default">
                                                     <div className="card-header" style={{ backgroundColor: '#000099', color: '#ffffff' }}>
-                                                        <h3 className="card-title"><i className="fa fa-user-plus"></i> AJOUTER UN UTILISATEUR</h3>
+                                                        <h3 className="card-title"><i className="fas fa-pen"></i> EDITER UN POST</h3>
 
                                                         <div className="card-tools">
                                                             <button type="button" className="btn btn-tool" data-card-widget="collapse">
@@ -228,142 +337,49 @@ const AddUser = () => {
                                                                     <div className="row">
                                                                         <div className="col-md-6">
                                                                             <div className="form-group first">
-                                                                                <label >Nom</label>
-                                                                                <input type="text" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. John" 
-                                                                                onChange={(e) => {setLastName(e.target.value)} } />
+                                                                                <label >Titre</label>
+                                                                                <input type="text"
+                                                                                    value={title}
+                                                                                    className="form-control button-border"
+                                                                                    placeholder="Titre..."
+                                                                                    onChange={(e) => { setTitle(e.target.value) }} />
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-6">
                                                                             <div className="form-group first">
-                                                                                <label >Prénom</label>
-                                                                                <input type="text" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. Smith"
-                                                                                onChange={(e) => {setFirstName(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label for="email">Adresse email</label>
-                                                                                <input type="text" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. john@your-domain.com"
-                                                                                onChange={(e) => {setEmail(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label for="email">Numéro</label>
-                                                                                <input type="email" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="e.g. john@your-domain.com"
-                                                                                onChange={(e) => {setPhone(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="row">
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label >Pays</label>
+                                                                                <label >Categories</label>
                                                                                 <select className="form-control button-border"
-                                                                                value={country}
-                                                                                onChange={(e) => {setCountry(e.target.value)} }>
-                                                                                    <option value="1">Fance</option>
-                                                                                    <option value="2">USA</option>
-                                                                                    <option value="3">Italie</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-                                                                            <div className="form-group first">
-                                                                                <label >Ville</label>
-                                                                                <select className="form-control button-border"
-                                                                                value={city}
-                                                                                onChange={(e) => {setCity(e.target.value)} }>
-                                                                                    <option value="1">Paris</option>
-                                                                                    <option value="2">Newyork</option>
-                                                                                    <option value="3">Rome</option>
+                                                                                    value={category}
+                                                                                    onChange={(e) => { setCategory(e.target.value) }}>
+                                                                                    <option value="1">Mémoire</option>
+                                                                                    <option value="2">Roman</option>
+                                                                                    <option value="3">Cahier de charge</option>
                                                                                 </select>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <div className="row">
-                                                                        <div className="col-md-6">
-
+                                                                        <div className="col-md-12">
                                                                             <div className="form-group last mb-3">
-                                                                                <label for="password">Mot de passe</label>
-                                                                                <input type="password" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="******" 
-                                                                                onChange={(e) => {setPass(e.target.value)} } />
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="col-md-6">
-
-                                                                            <div className="form-group last mb-3">
-                                                                                <label for="re-password">Confirmer le mot de passe</label>
-                                                                                <input type="password" 
-                                                                                className="form-control button-border" 
-                                                                                placeholder="******" 
-                                                                                onChange={(e) => {setConfirmPass(e.target.value)} } />
+                                                                                <label for="password">Descriptions</label>
+                                                                                <textarea cols="30" rows="5" className="form-control button-border"
+                                                                                    placeholder="Ecrivez quelque chose..."
+                                                                                    value={desc}
+                                                                                    onChange={(e) => { setDesc(e.target.value) }}></textarea>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div className="row row-space">
-                                                                        <div className="col-2">
-                                                                            <div className="input-group">
-                                                                                <label className="label">Genre</label>
-                                                                                <div className="p-t-10">
-                                                                                    <label className="radio-container m-r-45">Male
-                                                                                        <input type="radio" 
-                                                                                        name="gender" 
-                                                                                        value="M"
-                                                                                        onChange={(e) => {setGender(e.target.value)} } />
-                                                                                        <span className="checkmark"></span>
-                                                                                    </label>
-                                                                                    <label className="radio-container">Female
-                                                                                        <input type="radio"
-                                                                                        name="gender"
-                                                                                        value="F"
-                                                                                        onChange={(e) => {setGender(e.target.value)} } />
-                                                                                        <span className="checkmark"></span>
-                                                                                    </label>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <a href="">Avez-vous déjà un compte?</a>
-                                                                    <div className="d-flex mb-5 mt-4 align-items-center">
-                                                                        <div className="d-flex align-items-center">
-                                                                            <input type="checkbox" 
-                                                                            name="gender"
-                                                                            value={policy}
-                                                                            style={{ backgroundColor: '#fc841c' }}
-                                                                            onChange={handleChange} />&nbsp;&nbsp;
-                                                                            <label className="control  mb-0"><span className="caption">Creating an account means you're okay with our <a href="#">Terms and Conditions</a> and our <a href="#">Privacy Policy</a>.</span>
-
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <button disabled={!policy} className="btn button-color">
-                                                                        <i className="fa fa-check"></i> Enregistrer
+                                                                    
+                                                                    <button className="btn button-color">
+                                                                        <i className="fa fa-edit"></i> Modifier
                                                                     </button>
-
                                                                 </form>
                                                             </div>
                                                         </div>
+
                                                     </div>
                                                     {/* /.card-body */}
                                                 </div>
-
-
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -372,6 +388,52 @@ const AddUser = () => {
                         </div>
                         {/* /.col-md-6 */}
 
+                        <div className="row  mb-3">
+              <div className="col-md-12">
+
+                <div className="card">
+                  {/* /.card-header */}
+                  <div className="card-body" style={{ border: '2px solid #000099' }}>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <table className="table table-bordered">
+                          <thead style={{ backgroundColor: '#000099', color: '#ffffff' }}>
+                            <tr>
+                              <th scope="col">Image</th>
+                              <th scope="col">Rang</th>
+                              <th scope="col">Date</th>
+                              <th scope="col">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {image &&
+                              image.map((img) => (
+                                <tr key={img.id_image}>
+                                  <th scope="row">{img.photo}</th>
+                                  <td>{img.rang}</td>
+                                  <td>{img.date_creation}</td>
+                                  <td>
+                                    <button onClick={() => showDetails(img.id_image, img.photo)} 
+                                    className="btn btn-success btn-sm" data-toggle="modal" 
+                                    data-target="#exampleModal">
+                                        <i className="fa fa-edit"></i>
+                                    </button>
+                                    <button onClick={() => deleteImage(img.id_image)} className="btn btn-danger btn-sm">
+                                      <i className="fa fa-trash"></i>
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  {/* /.card-body */}
+                </div>
+              </div>
+            </div>
+
                         {/* /.col-md-6 */}
                     </div>
                     {/* /.row */}
@@ -379,9 +441,36 @@ const AddUser = () => {
                 {/* /.content */}
             </div>
             {/* /.content-wrapper */}
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header" style={{backgroundColor: '#000099', color: '#ffffff'}}>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        <i className="fa fa-image"></i> Editer l'image
+                        </h1>
+                        <button type="button" class=" btn btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" className="form-control" value={idImage} 
+                        />
+                        <p>{showImage}</p>
+                        <input type="file" className="form-control" name="upload_file"
+                        onChange={(e) => setNewPhoto(e.target.files[0]) }/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        X Fermer
+                        </button>
+                        <button onClick={updateImage} type="button" class="btn button-color">
+                        <i className="fa fa-edit"></i> Modifier
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
-    );
+     );
 }
-
-export default AddUser;
+ 
+export default EditPosts;

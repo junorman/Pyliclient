@@ -120,30 +120,31 @@ const SideBar = () => {
                                     </li>
                                 </ul>
                             </li>
-                            
-                            <li className="nav-item">
-                                <a href="#" className="nav-link" style={{ color: '#ffffff' }}>
+
+                            <li className="active nav-item">
+                                <a href="#post_link" data-toggle="collapse" aria-expanded="false" className="nav-link" style={{ color: '#ffffff' }}>
                                     <i className="nav-icon fas fa-pen"></i>
                                     <p>
                                         POSTS
-                                        <i className="right fas fa-angle-left"></i>
+                                        <i className="fas fa-angle-left right"></i>
                                     </p>
                                 </a>
-                                <ul className="nav nav-treeview">
+                                <ul className="collapse list-unstyled nav" id="post_link">
                                     <li className="nav-item">
-                                        <a href="pages/charts/chartjs.html" className="nav-link" style={{ color: '#ffffff' }}>
+                                        <Link className="nav-link" style={{ color: '#ffffff' }} to={'/add-post'}>
                                             <i className="far fa-circle nav-icon"></i>
                                             <p>Ajouter</p>
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li className="nav-item">
-                                        <a href="pages/charts/chartjs.html" className="nav-link" style={{ color: '#ffffff' }}>
+                                        <Link className="nav-link" style={{ color: '#ffffff' }} to={'/view-post'}>
                                             <i className="far fa-circle nav-icon"></i>
                                             <p>Consulter</p>
-                                        </a>
+                                        </Link>
                                     </li>
                                 </ul>
                             </li>
+                            
                             <li className="nav-item">
                                 <a href="#" className="nav-link" style={{ color: '#ffffff' }}>
                                     <i className="nav-icon fas fa-file"></i>
